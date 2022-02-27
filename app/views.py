@@ -59,7 +59,7 @@ def upload():
 
     return render_template('upload.html',form=form)
 
-@app.route('/upload/<string:filename>',methods=['GET'])
+@app.route('/upload/<filename>',methods=['GET'])
 def get_image(filename) :
     uploads = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])
     return send_from_directory(uploads,filename)
@@ -67,8 +67,9 @@ def get_image(filename) :
 
 @app.route('/files',methods=['GET'])
 def files() : 
+    if not session.get('logged_in'):
+        abort(401)
     uploads = get_uploaded_files()
-    print(uploads)
     uploads = uploads[1:]
     return render_template('files.html',uploads = uploads)
 
